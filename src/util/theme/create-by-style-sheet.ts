@@ -1,16 +1,16 @@
 import * as TOOLTIP_CSS_CONST from '@antv/component/lib/tooltip/css-const';
 import { ext } from '@antv/matrix-util';
-import { deepMix } from '@antv/util';
+import { deepMix, get } from '@antv/util';
 import Element from '../../geometry/element';
-import { LooseObject, StyleSheet } from '../../interface';
+import { LooseObject, StyleSheet, StyleSheetCfg, ComponentStyleSheet } from '../../interface';
 import { getAngle } from '../graphics';
 
 /**
  * 根据样式表创建 axis 组件主题样式
  * @param styleSheet
  */
-function createAxisStyles(styleSheet: StyleSheet): LooseObject {
-  return {
+function createAxisStyles(styleSheet: StyleSheet, axisStyleCfg?: StyleSheetCfg['axis']): LooseObject {
+  return deepMix({}, {
     title: {
       autoRotate: true,
       position: 'center', // start, center, end
@@ -63,11 +63,11 @@ function createAxisStyles(styleSheet: StyleSheet): LooseObject {
     },
     subTickLine: null,
     animate: true,
-  };
+  }, axisStyleCfg);
 }
 
 /**
- * 
+ *
  * @param styleSheet
  */
 // export function
@@ -76,8 +76,8 @@ function createAxisStyles(styleSheet: StyleSheet): LooseObject {
  * 根据样式表创建 legend 组件主题样式
  * @param styleSheet
  */
-function createLegendStyles(styleSheet: StyleSheet): LooseObject {
-  return {
+function createLegendStyles(styleSheet: StyleSheet, legendStyleCfg?: StyleSheetCfg['axis']): LooseObject {
+  return deepMix({}, {
     title: null,
     marker: {
       symbol: 'circle',
@@ -105,14 +105,14 @@ function createLegendStyles(styleSheet: StyleSheet): LooseObject {
     itemSpacing: styleSheet.legendItemSpacing,
     itemMarginBottom: styleSheet.legendItemMarginBottom,
     padding: styleSheet.legendPadding, // 图例组件自己的外边距
-  };
+  }, legendStyleCfg);
 }
 
 /**
  * 根据主题样式表生成主题结构
  * @param styleSheet 主题样式表
  */
-export function createThemeByStylesheet(styleSheet: StyleSheet): LooseObject {
+export function createThemeByStylesheet(styleSheet: StyleSheet, componentStyleCfg?: ComponentStyleSheet): LooseObject {
   const shapeStyles = {
     point: {
       default: {
@@ -253,9 +253,9 @@ export function createThemeByStylesheet(styleSheet: StyleSheet): LooseObject {
       },
     },
   };
-  const axisStyles = createAxisStyles(styleSheet);
-  const axisGridStyles = axisStyles.grid;
-  const legendStyles = createLegendStyles(styleSheet);
+  const axisStyles = createAxisStyles(styleSheet, get(componentStyleCfg, 'axis'));
+  const legendStyles = createLegendStyles(styleSheet, get(componentStyleCfg, 'legend'));
+
   return {
     background: styleSheet.backgroundColor,
     defaultColor: styleSheet.brandColor,
@@ -990,7 +990,6 @@ export function createThemeByStylesheet(styleSheet: StyleSheet): LooseObject {
           title: null,
           line: null,
           tickLine: null,
-          grid: axisGridStyles,
           verticalLimitLength: 1 / 3,
         }),
         right: deepMix({}, axisStyles, {
@@ -998,16 +997,15 @@ export function createThemeByStylesheet(styleSheet: StyleSheet): LooseObject {
           title: null,
           line: null,
           tickLine: null,
-          grid: axisGridStyles,
           verticalLimitLength: 1 / 3,
         }),
         circle: deepMix({}, axisStyles, {
           title: null,
-          grid: deepMix({}, axisGridStyles, { line: { type: 'line' } }),
+          grid: deepMix({}, axisStyles.grid, { line: { type: 'line' } }),
         }),
         radius: deepMix({}, axisStyles, {
           title: null,
-          grid: deepMix({}, axisGridStyles, { line: { type: 'circle' } }),
+          grid: deepMix({}, axisStyles.grid, { line: { type: 'circle' } }),
         }),
       },
       legend: {

@@ -65,7 +65,7 @@ describe('annotation update', () => {
   it('legend update', async () => {
     const [text, line] = getAnnotations();
 
-    await delay(1000);
+    await delay(100);
 
     chart.changeData([
       { name: 'London', 月份: 'Jan.', 月均降雨量: 18.9 },
@@ -87,7 +87,7 @@ describe('annotation update', () => {
 
   it('legend delete', async () => {
     const [text, line] = getAnnotations();
-    await delay(1000);
+    await delay(100);
 
     chart.annotation().clear(true);
 

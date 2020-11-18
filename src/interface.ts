@@ -50,6 +50,24 @@ export interface Point {
   readonly y: number;
 }
 
+/** 文字 */
+export interface TextStyle {
+  /** 文本颜色 */
+  readonly fill?: string;
+  /** 文本大小 */
+  readonly fontSize?: number;
+  /** 字体系列 */
+  readonly fontFamily?: string;
+  /** 文本粗细 */
+  readonly fontWeight?: number;
+  /** 文本行高 */
+  readonly lineHeight?: number;
+  /** 文本对齐方式 */
+  readonly textAlign?: 'center' | 'left' | 'right';
+  /** 文本基线 */
+  readonly textBaseline?: 'middle' | 'top' | 'bottom';
+}
+
 /** 画布范围 */
 export interface Region {
   readonly start: Point;
@@ -2260,6 +2278,77 @@ export interface StyleSheet {
   hollowIntervalInactiveBorderOpacity?: number;
 }
 
+export type ComponentStyleSheet = {
+  /** ---------- components start ---------- */
+  /** 坐标轴 */
+  axis?: {
+    title?: {
+      autoRotate?: boolean;
+      position?: string; // start, center, end
+      spacing?: number;
+      style?: TextStyle;
+    };
+    label?: {
+      autoRotate?: boolean;
+      autoEllipsis?: boolean;
+      autoHide?: boolean;
+      offset?: number;
+      style?: TextStyle;
+    };
+    line?: {
+      style?: {
+        lineWidth?: number;
+        stroke?: string;
+      };
+    };
+    grid?: {
+      line?: {
+        type?: 'line';
+        style?: {
+          stroke?: string;
+          lineWidth?: number;
+          lineDash?: string[];
+        };
+      };
+      alignTick?: boolean;
+      animate?: boolean;
+    };
+    tickLine?: {
+      style?: {
+        lineWidth?: number;
+        stroke?: string;
+      };
+      alignTick?: boolean; // 默认刻度线和文本对齐
+      length?: number;
+    };
+    subTickLine?: null;
+    animate?: boolean;
+  };
+  /** 图例 */
+  legend?: {
+    title?: string;
+    marker?: {
+      symbol?: string;
+      spacing?: number;
+      style?: {
+        r?: number;
+        fill?: string;
+      };
+    };
+    itemName?: {
+      spacing?: number; // 如果右边有 value 使用这个间距
+      style?: TextStyle;
+    };
+    flipPage?: boolean;
+    animate?: boolean;
+    maxItemWidth?: number;
+    itemSpacing?: number;
+    itemMarginBottom?: number;
+    padding?: number;
+  };
+  /** ---------- components end ---------- */
+};
+
 /** createTheme 主题样式表配置 */
 export type StyleSheetCfg = Pick<
   StyleSheet,
@@ -2271,17 +2360,8 @@ export type StyleSheetCfg = Pick<
   | 'paletteSemanticGreen'
   | 'paletteSemanticYellow'
   | 'fontFamily'
-> & {
-  /** ---------- components start ---------- */
-  // legend: {};
-  // axis: AxisStyle;
-  // label: {};
-  // tooltip: {};
-  // slider: {};
-  // scrollbar: {};
-  // annotation: {};
-  /** ---------- components end ---------- */
-};
+> &
+  ComponentStyleSheet;
 
 // ============================ 交互相关的类型定义 ============================
 /** 交互反馈的定义 */
